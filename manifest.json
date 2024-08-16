@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "WhatsApp Contact Scraper",
+  "version": "1.0",
+  "description": "Extract contact and group numbers from WhatsApp Web",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "background",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
