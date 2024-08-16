@@ -94,7 +94,6 @@
 	if (request.message === 'messageAgain') {
 	  const fromDate = request.fromDate;
       const toDate = request.toDate;
-	  console.log(fromDate);
 	  setTimeout( async () => {
 		 await No_From_Fillup(fromDate, toDate);
 	  },1000)     
@@ -314,14 +313,10 @@ async function wait(time) {
 async function No_From_Fillup(fromDate, toDate){
 	const apiUrl = 'https://pyschosocial.zapto.org/psycho_social_service/api/contact_list_API/'; 
     //const apiUrl = 'http://127.0.0.1:8000/api/contact_list_API/';
-	// API call start
 	
+    // API call start
 	var myHeaders = new Headers();
 	myHeaders.append("Content-Type", "application/json");
-	
-	// Construct the query parameters
-	//var fromDate = "2024-08-15";
-	//var toDate = "2024-08-15";
 
 	// Assuming apiUrl is the base URL, append the query parameters
 	var apiUrlWithParams = `${apiUrl}?FromDate=${encodeURIComponent(fromDate)}&ToDate=${encodeURIComponent(toDate)}`;
