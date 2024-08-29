@@ -58,7 +58,7 @@
 		  redirect: 'follow'
 		};
        const apiUrl = 'https://pyschosocial.zapto.org/psycho_social_service/api/contact/'; 
-       //const apiUrl = 'http://127.0.0.1:8000/api/contact/'; 
+        //const apiUrl = 'http://127.0.0.1:8000/api/contact/'; 
 		fetch(apiUrl, requestOptions)
 		  .then(response => response.text())
 		  .then(result => SendMessageToEachNumber(JSON.parse(result)))
@@ -155,13 +155,61 @@ async function sendMessageToContact(contact, message, files, type, interval) {
                 chatButton.click();
                 await wait(interval.click);
 
-                // // Wait for 1 second before proceeding to message contact box
-                // await wait(1000);
-
                 if (!(message === '')) {
                     // Wait for the message box to appear and send the message
                     let messageStatus = await sendMessage(message);
                     if (messageStatus) {
+                        sentContacts.push(contact);
+                    }
+                    await wait(interval.click);
+
+                    //2nd message
+                    const baseURL = "https://pyschosocial.zapto.org/psycho_social_service/";
+                    const completeURL = `${baseURL}${encodeURIComponent(contact)}/`;
+                    // const t_msg = `Hi, Please fill the form for free anxiety test. ${completeURL}`;
+
+                    let messageStatus_01 = await sendMessage(completeURL);
+                    if (messageStatus_01) {
+                        sentContacts.push(contact);
+                    }
+                    await wait(interval.click);
+
+                    const lastSentMessage_01 = await waitForLastSentMessage();
+                    const phoneNumberLinkSelector_01 = 'span.selectable-text a.selectable-text.copyable-text';
+                    const phoneNumberLink_01 = await waitForElement(phoneNumberLinkSelector_01, 5000, lastSentMessage_01);
+                    
+                    // Create a new MouseEvent
+                    let event = new MouseEvent('mouseover', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+
+                    // Dispatch the event to simulate mouseover
+                    phoneNumberLink_01.dispatchEvent(event);
+                    const dd_button_Selector = 'span[data-icon="down-context"]'
+                    const dd_button = await waitForElement(dd_button_Selector, 5000, lastSentMessage_01);
+                    await wait(1000);
+                    dd_button.click();
+
+                    await wait(1000);
+
+                    // Create a new MouseEvent
+                    let event_01 = new MouseEvent('mouseover', {
+                        view: window,
+                        bubbles: true,
+                        cancelable: true
+                    });
+
+                    const reply = document.querySelector('div[aria-label="Reply"]');
+                    reply.dispatchEvent(event_01);
+                    await wait(1000);
+                    reply.click();
+                    await wait(1000);
+                    //3rd message (reply)
+                    const message_03 = 'Please fillup free Anxiety and depression scale form fill-up garnu hola Ra hami hjr lai fill-up gara pachi report pathauna xam and taspachi k kasto samsya Rahaxa , kasto Anxiety ho tasko bharema hami hjr sanga Kura garna xam Ra kgarna sakinxa Ra hamro service KO bharema Kura garxam';
+                    let messageStatus_02 = await sendMessage(message_03);
+                    if (messageStatus_02) {
                         sentContacts.push(contact);
                     }
                     await wait(interval.click);
@@ -284,10 +332,13 @@ async function processContacts(my_contacts, files, type, interval) {
         sendingMessages = true;
         const contact = my_contacts[i].trim();
 		
-		const baseURL = "https://pyschosocial.zapto.org/psycho_social_service/";
-		const completeURL = `${baseURL}${encodeURIComponent(contact)}/`;
-		const t_msg = `Hi, Please fill the form for free anxiety test. ${completeURL}`;
-        const success = await sendMessageToContact(contact, t_msg, files, type, interval);
+        const first_msg = `हामी मनोसामाजिक परामर्श सेवाबाट आएका हौं।  हामी 8 वर्ष देखि एक परामर्श सत्र प्रदान गर्दैछौं र हामी मिति सम्म 90% रिकभरी दर छ।  सबै भन्दा पहिले हामी तपाइँको समस्याको बारेमा जान्छौं त्यसको लागि हामी तपाइँलाई नि: शुल्क चिन्ता र डिप्रेसन फारम भर्न चाहन्छौं, तपाइँले फारम भरेपछि हामी तपाइँलाई रिपोर्ट पठाउँछौं र हामी तपाइँसँग समस्याको बारेमा कलमा कुरा गर्छौं।
+  (हामी कसरी काम गर्छौं) पहिले, हामी तपाईंको समस्याको विश्लेषण गर्छौं, सल्लाह दिन्छौं, समाधान खोज्छौं र उपचार प्रक्रियालाई प्रशोधन गर्छौं।  यदि कसैले प्रयोग गरिरहेको छ भने हामी औषधि उपलब्ध गराउँदैनौं, हामी तिनीहरूलाई बिस्तारै परामर्श सत्र मार्फत सचेत गराउँछौं।  हाम्रा सेवाहरू मनोवैज्ञानिक, मनोचिकित्सक र डाक्टरहरू मार्फत समस्याको आधारमा गरिन्छ।  
+ (हामी के प्रदान गर्दछौं) पहिले 7 दिनको लागि हामी हप्तामा दुई पटक 2 व्यक्तिगत 45/1 घण्टा सत्र प्रदान गर्दछौं जसमा कार्य, दिनचर्या, खाना जाँच सूची, समस्या आधारित समाधान विधि, योग र ध्यान आदि समावेश छ।  र त्यसपछि यदि समस्या सानो छ भने तपाईले छिटो रिकभरी पाउनुहुनेछ र यदि तपाईलाई ठूलो समस्या भयो भने यसले 45 दिनदेखि 3 महिनासम्म लिन सक्छ।  नोट: हाम्रा सेवाहरू अनलाइन र भौतिक रूपमा पनि छन्।  कार्यालय 
+ 
+स्थान: काठमाडौं, रानीबान, पानीट्याङ्की, बनस्थली चोक भित्र र रिङ्गोडबाट १५ मिनेट टाढा।   धन्यवाद`;
+
+        const success = await sendMessageToContact(contact, first_msg, files, type, interval);
         if (success) {
             console.log(`%cMessage sent to ${contact} : Success`, 'color: green; font-weight: bold;');
         } else {
